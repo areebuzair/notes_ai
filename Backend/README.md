@@ -1,0 +1,26 @@
+Step 1:
+Create ```application.properties``` file inside ```./src/main/resources```.
+```
+spring.datasource.username=<Postgres Username>
+spring.datasource.password=<Postgres Password>
+gemini.key=<Gemini API Key>
+
+spring.application.name=NotesAI
+server.port=8095
+jwt.secret=Z5n8X4r9U2m3A6t1C0q7L5e2W8o9V4p3K1y7R9b2M4u8J0n5S6d3E2h7G8c4B1x6U2FsdGVkX19xP+V1zLZP5q3lq38odJ1iy8TxZqDqQhAEd8q9nFHQ23bY8CvJfPmfw+roC3m2q5OTWQ8bUjH2Sg
+jwt.expiration=360000000
+spring.datasource.url=jdbc:postgresql://localhost:5432/notes_ai
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#springdoc.api-docs.path=/api-docs
+springdoc.swagger-ui.path=/swagger-ui.html
+```
+
+Step 2:
+Open SQL Shell (psql) and create a database:
+```sql
+create database notes_ai
+```
