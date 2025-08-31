@@ -4,6 +4,7 @@ import com.iut.notesai.repository.UserRepository;
 import com.iut.notesai.security.JwtUtil;
 import com.iut.notesai.service.GeminiService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class TestController {
 
-    private final JwtUtil jwtUtil;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     private final GeminiService geminiService;
 
