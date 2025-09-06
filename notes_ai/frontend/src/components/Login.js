@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../Style/Login.css";
 import logo from "../Photo/logo.jpg";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -15,9 +17,12 @@ function Login() {
                 username,
                 password,
             });
-            const token = response.data; // backend returns JWT as plain string
+            const token = response.data; // backend returns JWT string
             localStorage.setItem("token", token);
             setMessage("Login successful ✅");
+
+            // redirect to MyFiles after 1s
+            setTimeout(() => navigate("/myfiles"), 1000);
         } catch (error) {
             setMessage("Invalid credentials ❌");
         }
