@@ -28,6 +28,78 @@ function MyFiles() {
             });
     }, []);
 
+    const download_file = (name) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            setMessage("You must log in first.");
+            return;
+        }
+
+        axios
+            .get(`http://localhost:8080/files/fileSystem/${encodeURI(name)}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                responseType: "blob", // important for binary files
+            })
+            .then((response) => {
+                // Create a download link
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement("a");
+                link.href = url;
+
+                // Extract filename from headers (fallback to `name`)
+                const contentDisposition = response.headers["content-disposition"];
+                let fileName = name;
+                if (contentDisposition) {
+                    const match = contentDisposition.match(/filename="(.+)"/);
+                    if (match.length > 1) {
+                        fileName = match[1];
+                    }
+                }
+
+                link.setAttribute("download", fileName);
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(() => {
+                setMessage("Failed to fetch file ❌");
+            });
+    };
+
+    const view_file = (name) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            setMessage("You must log in first.");
+            return;
+        }
+
+        axios
+            .get(`http://localhost:8080/files/fileSystem/${encodeURI(name)}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                responseType: "blob",
+            })
+            .then((response) => {
+                const file = new Blob([response.data], { type: response.headers["content-type"] });
+                const fileURL = window.URL.createObjectURL(file);
+
+                // Open in new tab
+                window.open(fileURL, "_blank");
+
+                // Optional: revoke the URL later to free memory
+                setTimeout(() => window.URL.revokeObjectURL(fileURL), 1000 * 60);
+            })
+            .catch(() => {
+                setMessage("Failed to open file ❌");
+            });
+    };
+
+
+
     return (
         <div className="files-container">
             <h2 className="files-title">My Files</h2>
@@ -38,6 +110,8 @@ function MyFiles() {
                         <div className="file-card" key={index}>
                             <img src={folderIcon} alt="file" className="file-icon" />
                             <p className="file-name">{file}</p>
+                            <button type="button" onClick={() => download_file(file)}>Download</button>
+                            <button type="button" onClick={() => view_file(file)}>View</button>
                         </div>
                     ))
                 ) : (
