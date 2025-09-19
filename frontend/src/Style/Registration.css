@@ -1,5 +1,4 @@
-/* Background styling */
-.login-background {
+.registration-background {
     background-image: url("../Photo/background.jpg");
     background-size: cover;
     background-position: center;
@@ -9,10 +8,9 @@
     justify-content: center;
 }
 
-/* Login box */
-.login-box {
+.registration-box {
     width: 40%;
-    height: 70%; /* slightly taller for spacing */
+    min-height: 70%;
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
@@ -21,36 +19,31 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* content starts from top */
+    justify-content: flex-start;
 }
 
-/* Larger logo */
-.login-logo {
+.registration-logo {
     width: 200px;
     height: auto;
     margin-bottom: 10px;
 }
 
-/* Title */
-.login-title {
-    margin-bottom: 10px; /* push form lower */
+.registration-title {
+    margin-bottom: 10px;
     font-size: 32px;
     font-weight: bold;
-    color: midnightblue;
+    color: #1e3c72;
 }
 
-/* Form */
-.login-form {
-    width: 80%; /* inputs & button are 80% of form width */
-    margin-top: auto; /* push form towards bottom */
+.registration-form {
+    width: 80%;
     display: flex;
     flex-direction: column;
     gap: 20px;
     align-items: center;
 }
 
-/* Inputs */
-.login-input {
+.registration-input {
     width: 100%;
     padding: 14px;
     border-radius: 8px;
@@ -58,13 +51,12 @@
     font-size: 16px;
 }
 
-/* Button */
-.login-button {
+.register-button {
     width: 40%;
     padding: 14px;
     border-radius: 8px;
     border: none;
-    background-color: #007bff;
+    background-color: #1e3c72;
     color: white;
     font-size: 18px;
     font-weight: bold;
@@ -72,30 +64,29 @@
     transition: background 0.3s ease;
 }
 
-.login-button:hover {
-    background-color: #0056b3;
+.register-button:hover {
+    background-color: #2a5298;
 }
 
-/* Message */
-.login-message {
-    margin-top: 20px;
-    font-size: 14px;
-    color: #d9534f;
-}
-
-
-.register-link {
+.error-message {
+    color: #ff3333;
     text-align: center;
     margin-bottom: 1rem;
     font-size: 0.9rem;
 }
 
-.register-link a {
+.login-link {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.login-link a {
     color: #1e3c72;
     text-decoration: none;
     font-weight: bold;
 }
 
-.register-link a:hover {
+.login-link a:hover {
     text-decoration: underline;
 }

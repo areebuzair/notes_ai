@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from 'react-router-dom';
 import axios from "axios";
 import "../Style/Login.css";
 import logo from "../Photo/logo.jpg";
@@ -51,6 +52,12 @@ function Login() {
                     <button type="submit" className="login-button">
                         Login
                     </button>
+
+                    <div className="register-link">
+                        New to notes.ai? <Link to="/register">Register now</Link>
+                    </div>
+
+
                 </form>
                 {message && <p className="login-message">{message}</p>}
             </div>
