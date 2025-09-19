@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FileStorageService {
@@ -54,4 +55,12 @@ public class FileStorageService {
     public List<String> getUserFiles(Long userID) {
         return fileDataRepository.findUserUploads(userID);
     }
+
+    public List<String> searchUserFiles(Long userId, String keyword) throws IOException {
+        List<String> allFiles = getUserFiles(userId); // assumes this method returns List<String> of filenames
+        return allFiles.stream()
+                .filter(name -> name.toLowerCase().contains(keyword.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
 }

@@ -11,4 +11,6 @@ import java.util.List;
 public interface FileDataRepository extends JpaRepository<FileData, Long> {
     @Query("select f.name from FileData f where f.userId=:userId")
     List<String> findUserUploads(@Param("userId") Long userId);
+
+
 }

@@ -62,4 +62,17 @@ public class FileController {
 
     }
 
+
+    @GetMapping("/fileSystem/search")
+    public ResponseEntity<List<String>> searchUserFiles(
+            @RequestHeader("Authorization") String token,
+            @RequestParam("keyword") String keyword) throws IOException {
+        token = token.replace("Bearer ", "");
+        Long userId = jwtUtil.getUserIdFromToken(token);
+        List<String> matchedFiles = fileStorageService.searchUserFiles(userId, keyword);
+        return ResponseEntity.ok(matchedFiles);
+    }
+
+
+
 }
