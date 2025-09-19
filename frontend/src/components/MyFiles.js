@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../Style/MyFiles.css";
 import folderIcon from "../Photo/folder.png";
+import FileUpload from "./UploadButton";
 
 function MyFiles() {
     const [files, setFiles] = useState([]);
@@ -118,6 +119,7 @@ function MyFiles() {
                     <p>No files found.</p>
                 )}
             </div>
+            <FileUpload />
         </div>
     );
 }
