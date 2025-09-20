@@ -20,9 +20,6 @@ import java.util.List;
 public class FileController {
 
     @Autowired
-    private FileStorageService service;
-
-    @Autowired
     private JwtUtil jwtUtil;
     @Autowired
     private FileStorageService fileStorageService;
@@ -31,7 +28,7 @@ public class FileController {
     public ResponseEntity<?> uploadFileToFileSystem(@RequestHeader("Authorization") String token, @RequestParam("file") MultipartFile file) throws IOException {
         token = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserIdFromToken(token);
-        String uploadFile = service.uploadFileToFileSystem(file, userId);
+        String uploadFile = fileStorageService.uploadFileToFileSystem(file, userId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(uploadFile);
     }
@@ -48,7 +45,7 @@ public class FileController {
     public ResponseEntity<?> downloadFileFromFileSystem(@RequestHeader("Authorization") String token, @PathVariable String fileName) throws IOException {
         token = token.replace("Bearer ", "");
         Long userId = jwtUtil.getUserIdFromToken(token);
-        byte[] fileData = service.downloadFileFromFileSystem(fileName, userId);
+        byte[] fileData = fileStorageService.downloadFileFromFileSystem(fileName, userId);
         // Detect content type (fallback to octet-stream if unknown)
         String contentType = Files.probeContentType(Paths.get(fileName));
         if (contentType == null) {

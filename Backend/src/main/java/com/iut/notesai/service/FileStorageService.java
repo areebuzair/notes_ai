@@ -20,12 +20,13 @@ public class FileStorageService {
 
     private final String FOLDER_PATH = "D:/Uploads/";
 
+
     public String uploadFileToFileSystem(MultipartFile file, long userID) throws IOException {
         // Create user folder if it doesn't exist
         String userFolderPath = FOLDER_PATH + userID + "/";
         File userFolder = new File(userFolderPath);
         if (!userFolder.exists()) {
-            if(!userFolder.mkdirs())
+            if (!userFolder.mkdirs())
                 return "Folder could not be created";
         }
 
@@ -46,8 +47,17 @@ public class FileStorageService {
         return null;
     }
 
+    public String getFilePath(String fileName, Long userID) throws IOException {
+        return FOLDER_PATH + userID + "/" + fileName;
+    }
+
+    public String getFileType(String filePath) throws IOException {
+        return fileDataRepository.getFileDataByFilePath(filePath).getType();
+    }
+
+
     public byte[] downloadFileFromFileSystem(String fileName, Long userID) throws IOException {
-        String filePath = FOLDER_PATH + userID + "/" + fileName;
+        String filePath = getFilePath(fileName, userID);
         byte[] files = Files.readAllBytes(new File(filePath).toPath());
         return files;
     }

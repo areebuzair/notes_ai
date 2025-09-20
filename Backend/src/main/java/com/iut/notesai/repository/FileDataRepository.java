@@ -13,4 +13,5 @@ public interface FileDataRepository extends JpaRepository<FileData, Long> {
     List<String> findUserUploads(@Param("userId") Long userId);
 
 
+    FileData getFileDataByFilePath(String filePath);
 }
