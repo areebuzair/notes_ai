@@ -2,6 +2,7 @@ package com.iut.notesai.service;
 
 import com.iut.notesai.model.entity.FileData;
 import com.iut.notesai.repository.FileDataRepository;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +19,18 @@ public class FileStorageService {
     private FileDataRepository fileDataRepository;
 
     private final String FOLDER_PATH = "D:/Uploads/";
+
+    public void deleteUserFolder(long userId) {
+        String userFolderPath = FOLDER_PATH + userId + "/";
+        File userFolder = new File(userFolderPath);
+        try {
+            FileUtils.deleteDirectory(userFolder);
+        } catch (IOException e) {
+            throw new RuntimeException("User folder could not be deleted!", e);
+        }
+
+        fileDataRepository.deleteByUserId(userId);
+    }
 
 
     public String uploadFileToFileSystem(MultipartFile file, long userID) throws IOException {
