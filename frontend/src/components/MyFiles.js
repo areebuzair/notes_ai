@@ -7,6 +7,7 @@ import FileUpload from "./UploadButton";
 function MyFiles() {
     const [files, setFiles] = useState([]);
     const [message, setMessage] = useState("");
+    const [viewerUrl, setViewerUrl] = useState(null); // Add this state
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -83,12 +84,16 @@ function MyFiles() {
             .then((response) => {
                 const file = new Blob([response.data], { type: response.headers["content-type"] });
                 const fileURL = window.URL.createObjectURL(file);
-                window.open(fileURL, "_blank");
-                setTimeout(() => window.URL.revokeObjectURL(fileURL), 1000 * 60);
+                setViewerUrl(fileURL); // Set the URL for iframe
             })
             .catch(() => {
                 setMessage("Failed to open file ❌");
             });
+    };
+
+    const closeViewer = () => {
+        if (viewerUrl) window.URL.revokeObjectURL(viewerUrl);
+        setViewerUrl(null);
     };
 
     return (
@@ -114,6 +119,23 @@ function MyFiles() {
                     <p>No files found.</p>
                 )}
             </div>
+            {viewerUrl && (
+                <div className="file-viewer-modal">
+                    <div className="file-viewer-topbar">
+                        <span className="file-viewer-title">File Viewer</span>
+                        <button className="file-viewer-close-btn" onClick={closeViewer}>✕</button>
+                    </div>
+                    <iframe
+                        src={viewerUrl}
+                        title="File Viewer"
+                        className="file-viewer-iframe"
+                        frameBorder="0"
+                        width="90%"
+                        height="600px"
+                        style={{ margin: "0 auto", display: "block", background: "#fff", borderRadius: "0 0 8px 8px" }}
+                    />
+                </div>
+            )}
         </div>
     );
 }
