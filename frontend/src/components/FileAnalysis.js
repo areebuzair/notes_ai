@@ -17,7 +17,6 @@ function FileAnalysis() {
     const [showQuestions, setShowQuestions] = useState(false);
     const [showAiResponse, setShowAiResponse] = useState(false);
 
-    // Fetch available files when component mounts
     useEffect(() => {
         const fetchFiles = async () => {
             const token = localStorage.getItem('token');
