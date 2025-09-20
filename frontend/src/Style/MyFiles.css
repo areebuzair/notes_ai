@@ -17,18 +17,71 @@
     margin-bottom: 20px;
 }
 
+/* Upload section styling */
+.upload-section {
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.upload-box {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(30, 60, 114, 0.08);
+    padding: 24px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.upload-input {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 16px;
+    background: #f5f7fa;
+}
+
+.upload-btn {
+    background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.upload-btn:hover {
+    background: linear-gradient(90deg, #2a5298 0%, #1e3c72 100%);
+}
+
+.upload-message {
+    margin-left: 16px;
+    color: #1e3c72;
+    font-weight: bold;
+}
+
 /* Grid for file icons */
 .files-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 30px;
     justify-items: center;
 }
 
 .file-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(30, 60, 114, 0.08);
+    padding: 18px 12px 16px 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 180px;
+    margin-bottom: 10px;
 }
 
 .file-icon {
@@ -38,8 +91,30 @@
 }
 
 .file-name {
-    font-size: 14px;
-    color: #333;
+    font-size: 15px;
+    color: #1e3c72;
     word-break: break-word;
     text-align: center;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.file-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.file-btn {
+    background: #1e3c72;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.file-btn:hover {
+    background: #2a5298;
 }

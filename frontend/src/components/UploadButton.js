@@ -1,60 +1,58 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import "../Style/MyFiles.css";
 
-export default function FileUpload() {
-    const [file, setFile] = useState(null);
-    const [message, setMessage] = useState("");
+function FileUpload() {
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploadMessage, setUploadMessage] = useState("");
 
-    const handleFileChange = (event) => {
-        setFile(event.target.files[0]);
+    const handleFileChange = (e) => {
+        setSelectedFile(e.target.files[0]);
+        setUploadMessage("");
     };
 
     const handleUpload = async () => {
-        if (!file) {
-            setMessage("Please select a file first.");
+        if (!selectedFile) {
+            setUploadMessage("Please select a file to upload.");
             return;
         }
-
         const token = localStorage.getItem("token");
         if (!token) {
-            setMessage("You must log in first.");
+            setUploadMessage("You must log in first.");
             return;
         }
-
         const formData = new FormData();
-        formData.append("file", file);
+        formData.append("file", selectedFile);
 
         try {
-            const response = await axios.post(
-                "http://localhost:8080/files/fileSystem",
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-            setMessage(`✅ File uploaded: ${response.data}`);
-            setFile(null); // reset file input
+            await axios.post("http://localhost:8080/files/fileSystem", formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            setUploadMessage("File uploaded successfully!");
+            setSelectedFile(null);
+            window.location.reload(); // reload to show new file
         } catch (error) {
-            setMessage("❌ File upload failed");
+            setUploadMessage("Upload failed ❌");
         }
     };
 
     return (
-        <div>
-            <h2>Upload File</h2>
+        <div className="upload-box">
             <input
                 type="file"
                 onChange={handleFileChange}
+                className="upload-input"
+                id="file-upload"
             />
-            <button
-                onClick={handleUpload}
-            >
-                Upload
+            <button className="upload-btn" onClick={handleUpload}>
+                Upload File
             </button>
-            {message && <p>{message}</p>}
+            {uploadMessage && <p className="upload-message">{uploadMessage}</p>}
         </div>
     );
 }
+
+export default FileUpload;

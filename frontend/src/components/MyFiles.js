@@ -41,24 +41,20 @@ function MyFiles() {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                responseType: "blob", // important for binary files
+                responseType: "blob",
             })
             .then((response) => {
-                // Create a download link
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement("a");
                 link.href = url;
-
-                // Extract filename from headers (fallback to `name`)
                 const contentDisposition = response.headers["content-disposition"];
                 let fileName = name;
                 if (contentDisposition) {
                     const match = contentDisposition.match(/filename="(.+)"/);
-                    if (match.length > 1) {
+                    if (match && match.length > 1) {
                         fileName = match[1];
                     }
                 }
-
                 link.setAttribute("download", fileName);
                 document.body.appendChild(link);
                 link.click();
@@ -87,11 +83,7 @@ function MyFiles() {
             .then((response) => {
                 const file = new Blob([response.data], { type: response.headers["content-type"] });
                 const fileURL = window.URL.createObjectURL(file);
-
-                // Open in new tab
                 window.open(fileURL, "_blank");
-
-                // Optional: revoke the URL later to free memory
                 setTimeout(() => window.URL.revokeObjectURL(fileURL), 1000 * 60);
             })
             .catch(() => {
@@ -99,27 +91,29 @@ function MyFiles() {
             });
     };
 
-
-
     return (
         <div className="files-container">
             <h2 className="files-title">My Files</h2>
             {message && <p className="files-message">{message}</p>}
+            <div className="upload-section">
+                <FileUpload />
+            </div>
             <div className="files-grid">
                 {files.length > 0 ? (
                     files.map((file, index) => (
                         <div className="file-card" key={index}>
                             <img src={folderIcon} alt="file" className="file-icon" />
                             <p className="file-name">{file}</p>
-                            <button type="button" onClick={() => download_file(file)}>Download</button>
-                            <button type="button" onClick={() => view_file(file)}>View</button>
+                            <div className="file-actions">
+                                <button className="file-btn" onClick={() => download_file(file)}>Download</button>
+                                <button className="file-btn" onClick={() => view_file(file)}>View</button>
+                            </div>
                         </div>
                     ))
                 ) : (
                     <p>No files found.</p>
                 )}
             </div>
-            <FileUpload />
         </div>
     );
 }
