@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../Style/MyFiles.css";
-import TopBar from "./TopBar"; // <-- import TopBar
+import TopBar from "./TopBar";
 import folderIcon from "../Photo/folder.png";
+import photoIcon from "../Photo/photo.png";
+import pdfIcon from "../Photo/pdf.png";
+import videoIcon from "../Photo/video.png";
 import FileUpload from "./UploadButton";
 
 function MyFiles() {
@@ -85,7 +88,7 @@ function MyFiles() {
             .then((response) => {
                 const file = new Blob([response.data], { type: response.headers["content-type"] });
                 const fileURL = window.URL.createObjectURL(file);
-                setViewerUrl(fileURL); // Set the URL for iframe
+                setViewerUrl(fileURL);
             })
             .catch(() => {
                 setMessage("Failed to open file ❌");
@@ -95,6 +98,21 @@ function MyFiles() {
     const closeViewer = () => {
         if (viewerUrl) window.URL.revokeObjectURL(viewerUrl);
         setViewerUrl(null);
+    };
+
+    // Helper to choose icon based on file extension
+    const getFileIcon = (filename) => {
+        const ext = filename.split('.').pop().toLowerCase();
+        if (["png", "jpg", "jpeg"].includes(ext)) {
+            return photoIcon;
+        }
+        if (["pdf", "docx"].includes(ext)) {
+            return pdfIcon;
+        }
+        if (ext === "mp4") {
+            return videoIcon;
+        }
+        return folderIcon;
     };
 
     return (
@@ -110,9 +128,9 @@ function MyFiles() {
                     {files.length > 0 ? (
                         files.map((file, index) => (
                             <div className="file-card" key={index}>
-                                <img src={folderIcon} alt="file" className="file-icon" />
+                                <img src={getFileIcon(file)} alt="file" className="file-icon" />
                                 <p className="file-name">{file}</p>
-                                <div className="file-actions">
+                                <div className="file-actions-bottom">
                                     <button className="file-btn" onClick={() => download_file(file)}>Download</button>
                                     <button className="file-btn" onClick={() => view_file(file)}>View</button>
                                 </div>
