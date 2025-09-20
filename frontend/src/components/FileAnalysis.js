@@ -116,40 +116,50 @@ function FileAnalysis() {
             <div className="analysis-container">
                 <h2 className="analysis-title">File Analysis</h2>
                 
-                <div className="analysis-upload-section">
-                    <input
-                        type="file"
-                        onChange={(e) => handleFileSelect(e.target.files[0])}
-                        className="analysis-file-input"
-                    />
-                    <button 
-                        onClick={uploadToGemini}
-                        className="analysis-button"
-                        disabled={loading || !selectedFile}
-                    >
-                        Upload File for Analysis
-                    </button>
+                <div className="analysis-wrapper">
+                    <div className="analysis-upload-section">
+                        <input
+                            type="file"
+                            onChange={(e) => handleFileSelect(e.target.files[0])}
+                            className="analysis-file-input"
+                        />
+                        <button 
+                            onClick={uploadToGemini}
+                            className="analysis-button"
+                            disabled={loading || !selectedFile}
+                        >
+                            Upload File for Analysis
+                        </button>
+                    </div>
                 </div>
 
-                <div className="analysis-actions">
-                    <button 
-                        onClick={getSummary}
-                        className="analysis-button"
-                        disabled={loading || !fileUri}
-                    >
-                        Get Summary
-                    </button>
-                    <button 
-                        onClick={getQuestions}
-                        className="analysis-button"
-                        disabled={loading || !fileUri}
-                    >
-                        Generate Questions
-                    </button>
+                <div className="analysis-blocks">
+                    <div className="analysis-block">
+                        <p className="block-description">Get a comprehensive summary of your document's content</p>
+                        <button 
+                            onClick={getSummary}
+                            className="analysis-button"
+                            disabled={loading || !fileUri}
+                        >
+                            Get Summary
+                        </button>
+                        <p className="block-hint">Click to generate a concise overview</p>
+                    </div>
+
+                    <div className="analysis-block">
+                        <p className="block-description">Generate practice questions from your content</p>
+                        <button 
+                            onClick={getQuestions}
+                            className="analysis-button"
+                            disabled={loading || !fileUri}
+                        >
+                            Generate Questions
+                        </button>
+                        <p className="block-hint">Perfect for self-assessment and learning</p>
+                    </div>
                 </div>
 
                 {message && <p className="analysis-message">{message}</p>}
-                
                 {loading && <div className="analysis-loading">Processing...</div>}
 
                 {summary && (
