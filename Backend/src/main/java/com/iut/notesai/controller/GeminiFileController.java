@@ -76,7 +76,7 @@ public class GeminiFileController {
     }
 
     @PostMapping("/analyze_explanation")
-    String analyze_explanation(GeminiFileAnalysisFromUser geminiFileAnalysisFromUser) {
+    String analyze_explanation(@RequestBody GeminiFileAnalysisFromUser geminiFileAnalysisFromUser) {
         String URI = geminiFileAnalysisFromUser.getUri();
         String fileType = geminiFileAnalysisFromUser.getFileType();
         String explanation = geminiFileAnalysisFromUser.getExplanation();

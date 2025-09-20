@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TopBar from './TopBar';
+import Quiz from './Quiz';
 import '../Style/FileAnalysis.css';
 
 function FileAnalysis() {
     const [files, setFiles] = useState([]);
     const [selectedFileName, setSelectedFileName] = useState('');
-    const [fileUri, setFileUri] = useState(null);
+    const [fileUri, setFileUri] = useState({ "uri": "https://generativelanguage.googleapis.com/v1beta/files/z6qw1dm13ik3", "fileType": "application/pdf" });
     const [summary, setSummary] = useState('');
-    const [questions, setQuestions] = useState('');
+    const [questions, setQuestions] = useState([]);
     const [explanation, setExplanation] = useState('');
     const [aiResponse, setAiResponse] = useState('');
     const [loading, setLoading] = useState(false);
@@ -63,6 +64,7 @@ function FileAnalysis() {
             console.error('Analysis error:', error);
             setMessage(error.response?.data?.message || 'Failed to analyze file');
         } finally {
+            console.log({ fileUri })
             setLoading(false);
         }
     };
@@ -75,7 +77,7 @@ function FileAnalysis() {
 
         setLoading(true);
         const token = localStorage.getItem('token');
-        
+
         try {
             const response = await axios.get('http://localhost:8080/ai/files/summary', {
                 params: fileUri,
@@ -99,7 +101,7 @@ function FileAnalysis() {
 
         setLoading(true);
         const token = localStorage.getItem('token');
-        
+
         try {
             const response = await axios.get('http://localhost:8080/ai/files/generate_questions', {
                 params: fileUri,
@@ -107,6 +109,7 @@ function FileAnalysis() {
                     'Authorization': `Bearer ${token}`
                 }
             });
+            // console.log(response.data)
             setQuestions(response.data);
         } catch (error) {
             setMessage('Failed to generate questions');
@@ -124,6 +127,8 @@ function FileAnalysis() {
         setLoading(true);
         const token = localStorage.getItem('token');
 
+        console.log(fileUri)
+
         try {
             const response = await axios.post('http://localhost:8080/ai/files/analyze_explanation', {
                 uri: fileUri.uri,
@@ -136,6 +141,7 @@ function FileAnalysis() {
             });
             setAiResponse(response.data);
         } catch (error) {
+            console.log(error)
             setMessage('Failed to analyze explanation');
         } finally {
             setLoading(false);
@@ -147,7 +153,7 @@ function FileAnalysis() {
             <TopBar />
             <div className="analysis-container">
                 <h2 className="analysis-title">File Analysis</h2>
-                
+
                 <div className="analysis-wrapper">
                     <div className="analysis-select-section">
                         <div className="select-container">
@@ -165,7 +171,7 @@ function FileAnalysis() {
                                 ))}
                             </datalist>
                         </div>
-                        <button 
+                        <button
                             onClick={analyzeFile}
                             className="analysis-button"
                             disabled={loading || !selectedFileName}
@@ -178,7 +184,7 @@ function FileAnalysis() {
                 <div className="analysis-blocks">
                     <div className="analysis-block">
                         <p className="block-description">Get a comprehensive summary of your document's content</p>
-                        <button 
+                        <button
                             onClick={getSummary}
                             className="analysis-button"
                             disabled={loading || !fileUri}
@@ -190,7 +196,7 @@ function FileAnalysis() {
 
                     <div className="analysis-block">
                         <p className="block-description">Generate practice questions from your content</p>
-                        <button 
+                        <button
                             onClick={getQuestions}
                             className="analysis-button"
                             disabled={loading || !fileUri}
@@ -210,7 +216,7 @@ function FileAnalysis() {
                         className="explanation-input"
                         disabled={!fileUri}
                     />
-                    <button 
+                    <button
                         onClick={submitExplanation}
                         className="analysis-button"
                         disabled={loading || !fileUri || !explanation}
@@ -222,17 +228,21 @@ function FileAnalysis() {
                 {message && <p className="analysis-message">{message}</p>}
                 {loading && <div className="analysis-loading">Processing...</div>}
 
+
+
+                {questions.length != 0 && (
+                    <div className="analysis-result">
+                        <h3>Generated Questions</h3>
+                        <div className="analysis-content">
+                            <Quiz Data={questions} />
+                        </div>
+                    </div>
+                )}
+
                 {summary && (
                     <div className="analysis-result">
                         <h3>Summary</h3>
                         <div className="analysis-content">{summary}</div>
-                    </div>
-                )}
-
-                {questions && (
-                    <div className="analysis-result">
-                        <h3>Generated Questions</h3>
-                        <div className="analysis-content">{questions}</div>
                     </div>
                 )}
 
