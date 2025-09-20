@@ -14,8 +14,10 @@ function FileAnalysis() {
     const [aiResponse, setAiResponse] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
+    const [showSummary, setShowSummary] = useState(false);
+    const [showQuestions, setShowQuestions] = useState(false);
+    const [showAiResponse, setShowAiResponse] = useState(false);
 
-    // Fetch available files when component mounts
     useEffect(() => {
         const fetchFiles = async () => {
             const token = localStorage.getItem('token');
@@ -179,79 +181,95 @@ function FileAnalysis() {
                             Analyze File
                         </button>
                     </div>
-                </div>
 
-                <div className="analysis-blocks">
-                    <div className="analysis-block">
-                        <p className="block-description">Get a comprehensive summary of your document's content</p>
-                        <button
-                            onClick={getSummary}
-                            className="analysis-button"
-                            disabled={loading || !fileUri}
-                        >
-                            Get Summary
-                        </button>
-                        <p className="block-hint">Click to generate a concise overview</p>
-                    </div>
+                    <div className="analysis-blocks">
+                        <div className="analysis-block">
+                            <p className="block-description">Get a comprehensive summary of your document's content</p>
+                            <button
+                                onClick={getSummary}
+                                className="analysis-button"
+                                disabled={loading || !fileUri}
+                            >
+                                Get Summary
+                            </button>
+                            <p className="block-hint">Click to generate a concise overview</p>
+                        </div>
 
-                    <div className="analysis-block">
-                        <p className="block-description">Generate practice questions from your content</p>
-                        <button
-                            onClick={getQuestions}
-                            className="analysis-button"
-                            disabled={loading || !fileUri}
-                        >
-                            Generate Questions
-                        </button>
-                        <p className="block-hint">Perfect for self-assessment and learning</p>
-                    </div>
-                </div>
+                        <div className="analysis-block">
+                            <p className="block-description">Generate practice questions from your content</p>
+                            <button
+                                onClick={getQuestions}
+                                className="analysis-button"
+                                disabled={loading || !fileUri || !explanation}
+                            >
+                                Submit Explanation
+                            </button>
 
-                <div className="explanation-section">
-                    <h3>Provide Your Explanation</h3>
-                    <textarea
-                        value={explanation}
-                        onChange={(e) => setExplanation(e.target.value)}
-                        placeholder="Enter your explanation here..."
-                        className="explanation-input"
-                        disabled={!fileUri}
-                    />
-                    <button
-                        onClick={submitExplanation}
-                        className="analysis-button"
-                        disabled={loading || !fileUri || !explanation}
-                    >
-                        Submit Explanation
-                    </button>
-                </div>
-
-                {message && <p className="analysis-message">{message}</p>}
-                {loading && <div className="analysis-loading">Processing...</div>}
-
-
-
-                {questions.length != 0 && (
-                    <div className="analysis-result">
-                        <h3>Generated Questions</h3>
-                        <div className="analysis-content">
-                            <Quiz Data={questions} />
+                            {aiResponse && (
+                                <div className="dropdown-section">
+                                    <div
+                                        className="dropdown-header"
+                                        onClick={() => setShowAiResponse(!showAiResponse)}
+                                    >
+                                        <span>View AI Response</span>
+                                        <span className="dropdown-arrow">{showAiResponse ? '▼' : '▶'}</span>
+                                    </div>
+                                    {showAiResponse && (
+                                        <div className="dropdown-content">
+                                            {aiResponse}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
-                )}
 
-                {summary && (
-                    <div className="analysis-result">
-                        <h3>Summary</h3>
-                        <div className="analysis-content">{summary}</div>
+                    <div className="explanation-section">
+                        <h3>Provide Your Explanation</h3>
+                        <textarea
+                            value={explanation}
+                            onChange={(e) => setExplanation(e.target.value)}
+                            placeholder="Enter your explanation here..."
+                            className="explanation-input"
+                            disabled={!fileUri}
+                        />
+                        <button
+                            onClick={submitExplanation}
+                            className="analysis-button"
+                            disabled={loading || !fileUri || !explanation}
+                        >
+                            Submit Explanation
+                        </button>
                     </div>
-                )}
 
-                {aiResponse && (
-                    <div className="analysis-result">
-                        <h3>AI Response to Your Explanation</h3>
-                        <div className="analysis-content">{aiResponse}</div>
-                    </div>
-                )}
+                    {message && <p className="analysis-message">{message}</p>}
+                    {loading && <div className="analysis-loading">Processing...</div>}
+
+
+
+                    {questions.length != 0 && (
+                        <div className="analysis-result">
+                            <h3>Generated Questions</h3>
+                            <div className="analysis-content">
+                                <Quiz Data={questions} />
+                            </div>
+                        </div>
+                    )}
+
+                    {summary && (
+                        <div className="analysis-result">
+                            <h3>Summary</h3>
+                            <div className="analysis-content">{summary}</div>
+                        </div>
+                    )}
+
+                    {aiResponse && (
+                        <div className="analysis-result">
+                            <h3>AI Response to Your Explanation</h3>
+                            <div className="analysis-content">{aiResponse}</div>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

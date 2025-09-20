@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../Style/TopBar.css";
 import logo from "../Photo/logo.jpg";
+import profileIcon from "../Photo/profile.png";
 
 function TopBar() {
     const navigate = useNavigate();
@@ -9,6 +10,10 @@ function TopBar() {
     const handleLogout = () => {
         localStorage.removeItem("token");
         navigate("/login");
+    };
+
+    const goToProfile = () => {
+        navigate("/profile");
     };
 
     return (
@@ -21,9 +26,17 @@ function TopBar() {
                     <Link to="/analysis" className="topbar-nav-btn">Analysis</Link>
                 </div>
             </div>
-            <button className="topbar-logout-btn" onClick={handleLogout}>
-                Logout
-            </button>
+            <div className="topbar-right">
+                <img 
+                    src={profileIcon} 
+                    alt="Profile" 
+                    className="topbar-profile-btn" 
+                    onClick={goToProfile} 
+                />
+                <button className="topbar-logout-btn" onClick={handleLogout}>
+                    Logout
+                </button>
+            </div>
         </div>
     );
 }
