@@ -7,7 +7,7 @@ import '../Style/FileAnalysis.css';
 function FileAnalysis() {
     const [files, setFiles] = useState([]);
     const [selectedFileName, setSelectedFileName] = useState('');
-    const [fileUri, setFileUri] = useState({ "uri": "https://generativelanguage.googleapis.com/v1beta/files/z6qw1dm13ik3", "fileType": "application/pdf" });
+    const [fileUri, setFileUri] = useState(null);
     const [summary, setSummary] = useState('');
     const [questions, setQuestions] = useState([]);
     const [explanation, setExplanation] = useState('');
@@ -200,27 +200,11 @@ function FileAnalysis() {
                             <button
                                 onClick={getQuestions}
                                 className="analysis-button"
-                                disabled={loading || !fileUri || !explanation}
+                                disabled={loading || !fileUri}
                             >
-                                Submit Explanation
+                                Generate Quiz
                             </button>
 
-                            {aiResponse && (
-                                <div className="dropdown-section">
-                                    <div
-                                        className="dropdown-header"
-                                        onClick={() => setShowAiResponse(!showAiResponse)}
-                                    >
-                                        <span>View AI Response</span>
-                                        <span className="dropdown-arrow">{showAiResponse ? '▼' : '▶'}</span>
-                                    </div>
-                                    {showAiResponse && (
-                                        <div className="dropdown-content">
-                                            {aiResponse}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
                         </div>
                     </div>
 
@@ -240,6 +224,23 @@ function FileAnalysis() {
                         >
                             Submit Explanation
                         </button>
+
+                        {aiResponse && (
+                            <div className="dropdown-section">
+                                <div
+                                    className="dropdown-header"
+                                    onClick={() => setShowAiResponse(!showAiResponse)}
+                                >
+                                    <span>View AI Response</span>
+                                    <span className="dropdown-arrow">{showAiResponse ? '▼' : '▶'}</span>
+                                </div>
+                                {showAiResponse && (
+                                    <div className="dropdown-content">
+                                        {aiResponse}
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
 
                     {message && <p className="analysis-message">{message}</p>}
@@ -263,12 +264,6 @@ function FileAnalysis() {
                         </div>
                     )}
 
-                    {aiResponse && (
-                        <div className="analysis-result">
-                            <h3>AI Response to Your Explanation</h3>
-                            <div className="analysis-content">{aiResponse}</div>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>
