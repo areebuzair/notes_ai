@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../Style/MyFiles.css";
+import TopBar from "./TopBar"; // <-- import TopBar
 import folderIcon from "../Photo/folder.png";
 import FileUpload from "./UploadButton";
 
 function MyFiles() {
     const [files, setFiles] = useState([]);
     const [message, setMessage] = useState("");
-    const [viewerUrl, setViewerUrl] = useState(null); // Add this state
+    const [viewerUrl, setViewerUrl] = useState(null);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -97,45 +98,48 @@ function MyFiles() {
     };
 
     return (
-        <div className="files-container">
-            <h2 className="files-title">My Files</h2>
-            {message && <p className="files-message">{message}</p>}
-            <div className="upload-section">
-                <FileUpload />
-            </div>
-            <div className="files-grid">
-                {files.length > 0 ? (
-                    files.map((file, index) => (
-                        <div className="file-card" key={index}>
-                            <img src={folderIcon} alt="file" className="file-icon" />
-                            <p className="file-name">{file}</p>
-                            <div className="file-actions">
-                                <button className="file-btn" onClick={() => download_file(file)}>Download</button>
-                                <button className="file-btn" onClick={() => view_file(file)}>View</button>
+        <div>
+            <TopBar />
+            <div className="files-container" style={{ paddingTop: "80px" }}>
+                <h2 className="files-title">My Files</h2>
+                {message && <p className="files-message">{message}</p>}
+                <div className="upload-section">
+                    <FileUpload />
+                </div>
+                <div className="files-grid">
+                    {files.length > 0 ? (
+                        files.map((file, index) => (
+                            <div className="file-card" key={index}>
+                                <img src={folderIcon} alt="file" className="file-icon" />
+                                <p className="file-name">{file}</p>
+                                <div className="file-actions">
+                                    <button className="file-btn" onClick={() => download_file(file)}>Download</button>
+                                    <button className="file-btn" onClick={() => view_file(file)}>View</button>
+                                </div>
                             </div>
+                        ))
+                    ) : (
+                        <p>No files found.</p>
+                    )}
+                </div>
+                {viewerUrl && (
+                    <div className="file-viewer-modal">
+                        <div className="file-viewer-topbar">
+                            <span className="file-viewer-title">File Viewer</span>
+                            <button className="file-viewer-close-btn" onClick={closeViewer}>✕</button>
                         </div>
-                    ))
-                ) : (
-                    <p>No files found.</p>
+                        <iframe
+                            src={viewerUrl}
+                            title="File Viewer"
+                            className="file-viewer-iframe"
+                            frameBorder="0"
+                            width="90%"
+                            height="600px"
+                            style={{ margin: "0 auto", display: "block", background: "#fff", borderRadius: "0 0 8px 8px" }}
+                        />
+                    </div>
                 )}
             </div>
-            {viewerUrl && (
-                <div className="file-viewer-modal">
-                    <div className="file-viewer-topbar">
-                        <span className="file-viewer-title">File Viewer</span>
-                        <button className="file-viewer-close-btn" onClick={closeViewer}>✕</button>
-                    </div>
-                    <iframe
-                        src={viewerUrl}
-                        title="File Viewer"
-                        className="file-viewer-iframe"
-                        frameBorder="0"
-                        width="90%"
-                        height="600px"
-                        style={{ margin: "0 auto", display: "block", background: "#fff", borderRadius: "0 0 8px 8px" }}
-                    />
-                </div>
-            )}
         </div>
     );
 }

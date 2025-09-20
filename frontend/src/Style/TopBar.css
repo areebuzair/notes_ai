@@ -1,0 +1,49 @@
+.topbar-container {
+    width: 100vw;
+    height: 60px;
+    background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1100;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.topbar-logo {
+    height: 40px;
+    width: 40px;
+    border-radius: 8px;
+    margin-right: 14px;
+}
+
+.topbar-title {
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.topbar-logout-btn {
+    background: #ff3333;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.topbar-logout-btn:hover {
+    background: #d10000;
+}
