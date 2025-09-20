@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import Registration from './components/Registration';
 import MyFiles from './components/MyFiles';
+import FileAnalysis from './components/FileAnalysis';
 import './App.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Registration />} />
           <Route path="/myfiles" element={<MyFiles />} />
+          <Route path="/analysis" element={<FileAnalysis />} />
         </Routes>
       </div>
     </Router>

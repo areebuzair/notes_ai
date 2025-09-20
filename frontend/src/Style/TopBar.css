@@ -16,13 +16,13 @@
 .topbar-left {
     display: flex;
     align-items: center;
+    gap: 20px;
 }
 
 .topbar-logo {
     height: 40px;
     width: 40px;
     border-radius: 8px;
-    margin-right: 14px;
 }
 
 .topbar-title {
@@ -30,18 +30,40 @@
     font-size: 22px;
     font-weight: bold;
     letter-spacing: 2px;
+    margin-right: 30px;
+}
+
+.topbar-nav-buttons {
+    display: flex;
+    gap: 16px;
+    margin-left: 20px;
+}
+
+.topbar-nav-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.topbar-nav-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
 }
 
 .topbar-logout-btn {
     background: #ff3333;
-    color: #fff;
+    color: white;
     border: none;
     border-radius: 6px;
-    padding: 10px 22px;
+    padding: 8px 20px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.3s ease;
 }
 
 .topbar-logout-btn:hover {
