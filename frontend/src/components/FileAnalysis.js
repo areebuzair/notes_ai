@@ -13,6 +13,9 @@ function FileAnalysis() {
     const [aiResponse, setAiResponse] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
+    const [showSummary, setShowSummary] = useState(false);
+    const [showQuestions, setShowQuestions] = useState(false);
+    const [showAiResponse, setShowAiResponse] = useState(false);
 
     // Fetch available files when component mounts
     useEffect(() => {
@@ -148,7 +151,7 @@ function FileAnalysis() {
             <div className="analysis-container">
                 <h2 className="analysis-title">File Analysis</h2>
                 
-                <div className="analysis-wrapper">
+                <div className="content-section">
                     <div className="analysis-select-section">
                         <div className="select-container">
                             <input
@@ -173,75 +176,105 @@ function FileAnalysis() {
                             Analyze File
                         </button>
                     </div>
-                </div>
 
-                <div className="analysis-blocks">
-                    <div className="analysis-block">
-                        <p className="block-description">Get a comprehensive summary of your document's content</p>
-                        <button 
-                            onClick={getSummary}
-                            className="analysis-button"
-                            disabled={loading || !fileUri}
-                        >
-                            Get Summary
-                        </button>
-                        <p className="block-hint">Click to generate a concise overview</p>
+                    <div className="analysis-blocks">
+                        <div className="analysis-block">
+                            <p className="block-description">Get a comprehensive summary of your document's content</p>
+                            <button 
+                                onClick={getSummary}
+                                className="analysis-button"
+                                disabled={loading || !fileUri}
+                            >
+                                Get Summary
+                            </button>
+                            <p className="block-hint">Click to generate a concise overview</p>
+                            
+                            {summary && (
+                                <div className="dropdown-section">
+                                    <div 
+                                        className="dropdown-header"
+                                        onClick={() => setShowSummary(!showSummary)}
+                                    >
+                                        <span>View Summary</span>
+                                        <span className="dropdown-arrow">{showSummary ? '▼' : '▶'}</span>
+                                    </div>
+                                    {showSummary && (
+                                        <div className="dropdown-content">
+                                            {summary}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="analysis-block">
+                            <p className="block-description">Generate practice questions from your content</p>
+                            <button 
+                                onClick={getQuestions}
+                                className="analysis-button"
+                                disabled={loading || !fileUri}
+                            >
+                                Generate Questions
+                            </button>
+                            <p className="block-hint">Perfect for self-assessment and learning</p>
+                            
+                            {questions && (
+                                <div className="dropdown-section">
+                                    <div 
+                                        className="dropdown-header"
+                                        onClick={() => setShowQuestions(!showQuestions)}
+                                    >
+                                        <span>View Questions</span>
+                                        <span className="dropdown-arrow">{showQuestions ? '▼' : '▶'}</span>
+                                    </div>
+                                    {showQuestions && (
+                                        <div className="dropdown-content">
+                                            {questions}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </div>
 
-                    <div className="analysis-block">
-                        <p className="block-description">Generate practice questions from your content</p>
+                    <div className="explanation-section">
+                        <h3>Provide Your Explanation</h3>
+                        <textarea
+                            value={explanation}
+                            onChange={(e) => setExplanation(e.target.value)}
+                            placeholder="Enter your explanation here..."
+                            className="explanation-input"
+                            disabled={!fileUri}
+                        />
                         <button 
-                            onClick={getQuestions}
+                            onClick={submitExplanation}
                             className="analysis-button"
-                            disabled={loading || !fileUri}
+                            disabled={loading || !fileUri || !explanation}
                         >
-                            Generate Questions
+                            Submit Explanation
                         </button>
-                        <p className="block-hint">Perfect for self-assessment and learning</p>
+                        
+                        {aiResponse && (
+                            <div className="dropdown-section">
+                                <div 
+                                    className="dropdown-header"
+                                    onClick={() => setShowAiResponse(!showAiResponse)}
+                                >
+                                    <span>View AI Response</span>
+                                    <span className="dropdown-arrow">{showAiResponse ? '▼' : '▶'}</span>
+                                </div>
+                                {showAiResponse && (
+                                    <div className="dropdown-content">
+                                        {aiResponse}
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
-                </div>
-
-                <div className="explanation-section">
-                    <h3>Provide Your Explanation</h3>
-                    <textarea
-                        value={explanation}
-                        onChange={(e) => setExplanation(e.target.value)}
-                        placeholder="Enter your explanation here..."
-                        className="explanation-input"
-                        disabled={!fileUri}
-                    />
-                    <button 
-                        onClick={submitExplanation}
-                        className="analysis-button"
-                        disabled={loading || !fileUri || !explanation}
-                    >
-                        Submit Explanation
-                    </button>
                 </div>
 
                 {message && <p className="analysis-message">{message}</p>}
                 {loading && <div className="analysis-loading">Processing...</div>}
-
-                {summary && (
-                    <div className="analysis-result">
-                        <h3>Summary</h3>
-                        <div className="analysis-content">{summary}</div>
-                    </div>
-                )}
-
-                {questions && (
-                    <div className="analysis-result">
-                        <h3>Generated Questions</h3>
-                        <div className="analysis-content">{questions}</div>
-                    </div>
-                )}
-
-                {aiResponse && (
-                    <div className="analysis-result">
-                        <h3>AI Response to Your Explanation</h3>
-                        <div className="analysis-content">{aiResponse}</div>
-                    </div>
-                )}
             </div>
         </div>
     );

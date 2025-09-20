@@ -23,6 +23,7 @@
     height: 40px;
     width: 40px;
     border-radius: 8px;
+    object-fit: cover;   /* prevent stretching */
 }
 
 .topbar-title {
@@ -52,6 +53,25 @@
 .topbar-nav-btn:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: translateY(-1px);
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* space between profile and logout */
+}
+
+.topbar-profile-btn {
+    height: 36px;
+    width: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+    transition: transform 0.2s ease;
+}
+
+.topbar-profile-btn:hover {
+    transform: scale(1.05);
 }
 
 .topbar-logout-btn {
