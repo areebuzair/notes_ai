@@ -144,7 +144,11 @@ function MyFiles() {
                     <div className="file-viewer-modal">
                         <div className="file-viewer-topbar">
                             <span className="file-viewer-title">File Viewer</span>
-                            <button className="file-viewer-close-btn" onClick={closeViewer}>✕</button>
+                            <div className="viewer-controls">
+                                <button className="viewer-control-btn minimize" onClick={() => setViewerUrl(null)} title="Minimize">─</button>
+                                <button className="viewer-control-btn maximize" onClick={() => document.querySelector('.file-viewer-iframe').requestFullscreen()} title="Maximize">□</button>
+                                <button className="file-viewer-close-btn" onClick={closeViewer} title="Close">✕</button>
+                            </div>
                         </div>
                         <iframe
                             src={viewerUrl}

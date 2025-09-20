@@ -196,3 +196,37 @@
     border-radius: 0 0 8px 8px;
     background: #fff;
 }
+
+/* Viewer controls styling */
+.viewer-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.viewer-control-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.viewer-control-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.viewer-control-btn.minimize {
+    font-size: 16px;
+}
+
+.viewer-control-btn.maximize {
+    font-size: 14px;
+}
