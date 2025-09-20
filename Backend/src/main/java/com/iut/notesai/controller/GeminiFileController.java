@@ -2,6 +2,7 @@ package com.iut.notesai.controller;
 
 import com.google.genai.Client;
 import com.google.genai.types.File;
+import com.iut.notesai.model.GeminiFileAnalysisFromUser;
 import com.iut.notesai.model.GeminiFileURIObject;
 import com.iut.notesai.model.GeminiFileUploadObject;
 import com.iut.notesai.security.JwtUtil;
@@ -72,5 +73,15 @@ public class GeminiFileController {
 
 
         return geminiService.generateQuestions(URI, fileType);
+    }
+
+    @PostMapping("/analyze_explanation")
+    String analyze_explanation(GeminiFileAnalysisFromUser geminiFileAnalysisFromUser) {
+        String URI = geminiFileAnalysisFromUser.getUri();
+        String fileType = geminiFileAnalysisFromUser.getFileType();
+        String explanation = geminiFileAnalysisFromUser.getExplanation();
+
+
+        return geminiService.analyzeUserExplanationForFile(URI, fileType, explanation);
     }
 }

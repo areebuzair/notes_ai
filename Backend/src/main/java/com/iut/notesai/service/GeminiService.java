@@ -118,4 +118,30 @@ public class GeminiService {
 
         return response.text();
     }
+
+    public String analyzeUserExplanationForFile(String URI, String fileType, String explanation) {
+
+        String system_prompt = "You have been given a file. The user will try explain what they think about the file, or how they understand it. Your ask is to evaluate the user's explanation. Comment on whether the user is right or wrong, and give brief hints. Keep your answer concise.";
+
+        Content systemInstruction = Content.fromParts(Part.fromText(system_prompt));
+        Part promptPart = Part.fromText(explanation);
+        Part contentPart = Part.fromUri(URI, fileType);
+
+        Content content = Content.builder()
+                .parts(List.of(promptPart, contentPart))
+                .build();
+
+        GenerateContentConfig config =
+                GenerateContentConfig.builder()
+                        .systemInstruction(systemInstruction)
+                        .build();
+
+        GenerateContentResponse response =
+                client.models.generateContent(
+                        "gemini-2.5-flash",
+                        content,
+                        config);
+
+        return response.text();
+    }
 }
