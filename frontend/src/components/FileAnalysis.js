@@ -1,62 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import TopBar from './TopBar';
 import '../Style/FileAnalysis.css';
 
 function FileAnalysis() {
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [files, setFiles] = useState([]);
+    const [selectedFileName, setSelectedFileName] = useState('');
     const [fileUri, setFileUri] = useState(null);
     const [summary, setSummary] = useState('');
     const [questions, setQuestions] = useState('');
+    const [explanation, setExplanation] = useState('');
+    const [aiResponse, setAiResponse] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
 
-    const handleFileSelect = (file) => {
-        setSelectedFile(file);
-        setMessage('');
-        setSummary('');
-        setQuestions('');
-    };
+    // Fetch available files when component mounts
+    useEffect(() => {
+        const fetchFiles = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setMessage('You must be logged in');
+                return;
+            }
 
-    const uploadToGemini = async () => {
-        if (!selectedFile) {
+            try {
+                const response = await axios.get('http://localhost:8080/files/fileSystem/all', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                setFiles(response.data);
+            } catch (error) {
+                setMessage('Failed to fetch files');
+            }
+        };
+
+        fetchFiles();
+    }, []);
+
+    const analyzeFile = async () => {
+        if (!selectedFileName) {
             setMessage('Please select a file first');
             return;
         }
 
         setLoading(true);
         const token = localStorage.getItem('token');
-        if (!token) {
-            setMessage('You must be logged in');
-            setLoading(false);
-            return;
-        }
-
-        // Create FormData with the actual file
-        const formData = new FormData();
-        formData.append('file', selectedFile);
 
         try {
             const response = await axios.post(
-                'http://localhost:8080/ai/files/upload', 
-                formData,
+                'http://localhost:8080/ai/files/upload',
+                { fileName: selectedFileName },
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
-                        // Remove Content-Type header to let browser set it automatically with boundary
                     }
                 }
             );
             setFileUri(response.data);
-            setMessage('File uploaded successfully!');
+            setMessage('File analyzed successfully!');
         } catch (error) {
-            console.error('Upload error:', error);
-            if (error.response?.status === 401) {
-                setMessage('Authentication failed. Please login again.');
-                
-            } else {
-                setMessage(error.response?.data?.message || 'Failed to upload file to Gemini');
-            }
+            console.error('Analysis error:', error);
+            setMessage(error.response?.data?.message || 'Failed to analyze file');
         } finally {
             setLoading(false);
         }
@@ -64,7 +69,7 @@ function FileAnalysis() {
 
     const getSummary = async () => {
         if (!fileUri) {
-            setMessage('Please upload a file first');
+            setMessage('Please analyze a file first');
             return;
         }
 
@@ -88,7 +93,7 @@ function FileAnalysis() {
 
     const getQuestions = async () => {
         if (!fileUri) {
-            setMessage('Please upload a file first');
+            setMessage('Please analyze a file first');
             return;
         }
 
@@ -110,6 +115,33 @@ function FileAnalysis() {
         }
     };
 
+    const submitExplanation = async () => {
+        if (!fileUri || !explanation) {
+            setMessage('Please analyze a file and provide an explanation');
+            return;
+        }
+
+        setLoading(true);
+        const token = localStorage.getItem('token');
+
+        try {
+            const response = await axios.post('http://localhost:8080/ai/files/analyze_explanation', {
+                uri: fileUri.uri,
+                fileType: fileUri.fileType,
+                explanation: explanation
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            setAiResponse(response.data);
+        } catch (error) {
+            setMessage('Failed to analyze explanation');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div>
             <TopBar />
@@ -117,18 +149,28 @@ function FileAnalysis() {
                 <h2 className="analysis-title">File Analysis</h2>
                 
                 <div className="analysis-wrapper">
-                    <div className="analysis-upload-section">
-                        <input
-                            type="file"
-                            onChange={(e) => handleFileSelect(e.target.files[0])}
-                            className="analysis-file-input"
-                        />
+                    <div className="analysis-select-section">
+                        <div className="select-container">
+                            <input
+                                type="text"
+                                value={selectedFileName}
+                                onChange={(e) => setSelectedFileName(e.target.value)}
+                                placeholder="Select or type file name"
+                                list="file-list"
+                                className="analysis-file-input"
+                            />
+                            <datalist id="file-list">
+                                {files.map((file, index) => (
+                                    <option key={index} value={file} />
+                                ))}
+                            </datalist>
+                        </div>
                         <button 
-                            onClick={uploadToGemini}
+                            onClick={analyzeFile}
                             className="analysis-button"
-                            disabled={loading || !selectedFile}
+                            disabled={loading || !selectedFileName}
                         >
-                            Upload File for Analysis
+                            Analyze File
                         </button>
                     </div>
                 </div>
@@ -159,6 +201,24 @@ function FileAnalysis() {
                     </div>
                 </div>
 
+                <div className="explanation-section">
+                    <h3>Provide Your Explanation</h3>
+                    <textarea
+                        value={explanation}
+                        onChange={(e) => setExplanation(e.target.value)}
+                        placeholder="Enter your explanation here..."
+                        className="explanation-input"
+                        disabled={!fileUri}
+                    />
+                    <button 
+                        onClick={submitExplanation}
+                        className="analysis-button"
+                        disabled={loading || !fileUri || !explanation}
+                    >
+                        Submit Explanation
+                    </button>
+                </div>
+
                 {message && <p className="analysis-message">{message}</p>}
                 {loading && <div className="analysis-loading">Processing...</div>}
 
@@ -173,6 +233,13 @@ function FileAnalysis() {
                     <div className="analysis-result">
                         <h3>Generated Questions</h3>
                         <div className="analysis-content">{questions}</div>
+                    </div>
+                )}
+
+                {aiResponse && (
+                    <div className="analysis-result">
+                        <h3>AI Response to Your Explanation</h3>
+                        <div className="analysis-content">{aiResponse}</div>
                     </div>
                 )}
             </div>
